@@ -29,6 +29,7 @@
     
     JWSlideMenuViewController *f = [[FirstViewController alloc]initWithNibName:@"FirstViewController" bundle:nil];
     JWSlideMenuViewController *s = [[SecondViewController alloc]initWithNibName:@"SecondViewController" bundle:nil];
+    JWSlideMenuViewController *t = [[FirstViewController alloc]initWithNibName:@"FirstViewController" bundle:nil];
         
     JWSlideMenuController *slideMenu = [[[JWSlideMenuController alloc] init] autorelease];
     
@@ -36,6 +37,7 @@
     
     [slideMenu addViewController:f withTitle:@"First" andImage:starMenuImage];
     [slideMenu addViewController:s withTitle:@"Second" andImage:starMenuImage];
+    [slideMenu addViewController:t withTitle:@"Second" andImage:starMenuImage];
     
     self.window.rootViewController = slideMenu;
     

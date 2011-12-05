@@ -13,7 +13,9 @@
 @interface JWSlideMenuController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (retain, nonatomic) UITableView *menuTableView;
+@property (retain, nonatomic) UITableView *menuTableView2;
 @property (retain, nonatomic) UIView *menuView;
+@property (retain, nonatomic) UIView *menuView2;
 @property (retain, nonatomic) UIToolbar *contentToolbar;
 @property (retain, nonatomic) UIView *contentView;
 @property (retain, nonatomic) UIColor *menuLabelColor;

@@ -61,7 +61,11 @@
     if(self) {
         _rootViewController = rootViewController;
         UIBarButtonItem *menuButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"menu_icon_20x20.png"] style:UIBarButtonItemStyleBordered target:self.slideMenuController action:@selector(toggleMenu)] autorelease];
+      
+        UIBarButtonItem *menuButton2 = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"menu_icon_20x20.png"] style:UIBarButtonItemStyleBordered target:self.slideMenuController action:@selector(toggleMenu2)] autorelease];
         rootViewController.navigationItem.leftBarButtonItem = menuButton;
+        rootViewController.navigationItem.rightBarButtonItem = menuButton2;
+        
         [self addChildViewController:rootViewController];
         [self.contentView addSubview:rootViewController.view];
         [self.navigationBar pushNavigationItem:rootViewController.navigationItem animated:YES];

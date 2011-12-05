@@ -13,7 +13,9 @@
 @implementation JWSlideMenuController
 
 @synthesize menuTableView;
+@synthesize menuTableView2;
 @synthesize menuView;
+@synthesize menuView2;
 @synthesize contentToolbar;
 @synthesize contentView;
 @synthesize menuLabelColor;
@@ -24,10 +26,14 @@
     if (self) {
         
         CGRect masterRect = self.view.bounds;
-        float menuWidth = 267.0; //masterRect.size.width - 53
+        float menuWidth = masterRect.size.width -53; //masterRect.size.width - 53
         
         CGRect menuFrame = CGRectMake(0.0, 0.0, menuWidth, masterRect.size.height);
         CGRect contentFrame = CGRectMake(0.0, 0.0, masterRect.size.width, masterRect.size.height);
+      
+      
+      CGRect menuFrame2 = CGRectMake(53, 0.0, menuWidth, masterRect.size.height);
+
         
         self.menuLabelColor = [UIColor whiteColor];
         
@@ -37,16 +43,28 @@
         self.menuTableView.backgroundColor = [UIColor darkGrayColor];
         self.menuTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         self.menuTableView.separatorColor = [UIColor whiteColor];
-                
+      
+      self.menuTableView2 = [[[UITableView alloc] initWithFrame:menuFrame] autorelease];
+      self.menuTableView2.dataSource = self;
+      self.menuTableView2.delegate = self;
+      self.menuTableView2.backgroundColor = [UIColor blueColor];
+      self.menuTableView2.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+      self.menuTableView2.separatorColor = [UIColor whiteColor];
+      
+      
         self.menuView = [[[UIView alloc] initWithFrame:menuFrame] autorelease];
         [self.menuView addSubview:self.menuTableView];
+      
+      self.menuView2 = [[[UIView alloc] initWithFrame:menuFrame2] autorelease];
+      [self.menuView2 addSubview:self.menuTableView2];
                 
         self.contentView = [[[UIView alloc] initWithFrame:contentFrame] autorelease];
         self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.contentView.backgroundColor = [UIColor grayColor];
         
         [self.view addSubview:self.menuView];
-        [self.view insertSubview:self.contentView aboveSubview:self.menuView];
+        [self.view addSubview:self.menuView2];
+        [self.view insertSubview:self.contentView aboveSubview:self.menuView2];
     }
     return self;
 }
@@ -59,6 +77,36 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+-(IBAction)toggleMenu2
+{
+  
+  [UIView beginAnimations:@"Menu Slide" context:nil];
+  [UIView setAnimationDuration:0.2];
+  
+  if(self.contentView.frame.origin.x == 0) //Menu is hidden
+  {
+    CGRect newFrame = CGRectOffset(self.contentView.frame, -(self.menuView.frame.size.width), 0.0);
+    self.contentView.frame = newFrame;
+    self.menuTableView.hidden=YES;
+    
+    CGRect masterRect = self.view.bounds;
+    float menuWidth = masterRect.size.width -53; //masterRect.size.width - 53
+    CGRect menuFrame2 = CGRectMake(53, 0.0, menuWidth, masterRect.size.height);
+    self.menuView2.frame=menuFrame2;
+    
+    self.menuTableView2.hidden=NO;
+  }
+  else //Menu is shown
+  {
+    [menuTableView reloadData];
+    CGRect newFrame = CGRectOffset(self.contentView.frame, (self.menuView.frame.size.width), 0.0);
+    self.contentView.frame = newFrame;
+        self.menuTableView.hidden=YES;
+  }
+  
+  [UIView commitAnimations];
+}
+
 -(IBAction)toggleMenu
 {
     
@@ -69,6 +117,9 @@
     {
         CGRect newFrame = CGRectOffset(self.contentView.frame, self.menuView.frame.size.width, 0.0);
         self.contentView.frame = newFrame;
+        self.menuView2.frame= newFrame;
+        self.menuTableView.hidden=NO;
+        //self.menuTableView2.hidden=YES;
     }
     else //Menu is shown
     {
@@ -101,6 +152,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+  if(tableView==self.menuTableView) {
     static NSString *cellIdentifier = @"MenuCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if(cell == nil)
@@ -121,11 +174,16 @@
     cell.imageView.image = controller.tabBarItem.image;
     
     return cell;
+  }
+  return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+{ 
+  if(tableView==self.menuTableView) {
     return [self.childViewControllers count];
+  }
+  return 0;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -135,8 +193,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-    //UIViewController *previousChildViewController =
-    //[self transitionFromViewController:previousChildViewController toViewController:newController duration:0.5 options:UIViewAnimationOptionTransitionFlipFromLeft animations:NULL completion:NULL];
     
     if([contentView.subviews count] == 1)
     {
