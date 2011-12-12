@@ -194,11 +194,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
     
-    if([contentView.subviews count] == 1)
-    {
+    if([contentView.subviews count] == 1){
         [[contentView.subviews objectAtIndex:0] removeFromSuperview];
     }
-    [contentView addSubview:((UIViewController *)[self.childViewControllers objectAtIndex:indexPath.row]).view];
+    
+    UIViewController* controller = (UIViewController*)[self.childViewControllers objectAtIndex:indexPath.row];
+    controller.view.frame = self.contentView.bounds;
+    
+    [contentView addSubview:controller.view];
     [self toggleMenu];
 }
  
